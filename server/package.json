@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./src",
     "dev": "cross-env NODE_ENV=development nodemon ./src",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest -i"
   },
   "keywords": [],
   "author": "José María Mares Giner",

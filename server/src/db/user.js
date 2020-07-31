@@ -27,6 +27,19 @@ async function insertNewUser(user){
     }
 }
 
+//Check if a user exists in the DB
+async function findUser(user){
+    try{
+        const db = await client.db;
+        const userFound = await db.collection('users').findOne({email: user.email});
+        return userFound;
+    }catch(err){
+        err.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        throw err;
+    }
+}
+
 module.exports = {
-    insertNewUser
+    insertNewUser,
+    findUser
 };
