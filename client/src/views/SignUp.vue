@@ -50,8 +50,6 @@
 <script>
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:5000';
-
 export default {
   data: () => ({
     errorMessage: '',
@@ -78,8 +76,9 @@ export default {
           password: this.user.password,
         };
 
-        axios.post(`${API_URL}/auth/signup`, userData).then((res) => {
-          console.log(res.data);
+        axios.post('/auth/signup', userData).then((res) => {
+          localStorage.token = res.data.token;
+          this.$router.push('Home');
         }).catch((err) => {
           this.errorMessage = err.response.data.message;
         });

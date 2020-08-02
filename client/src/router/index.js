@@ -1,9 +1,18 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import LogIn from '../views/LogIn.vue';
 import SignUp from '../views/SignUp.vue';
 
 Vue.use(VueRouter);
+
+function loginRedirection(to, from, next) {
+  if (localStorage.token) {
+    next('Home');
+  } else {
+    next();
+  }
+}
 
 const routes = [
   {
@@ -15,6 +24,13 @@ const routes = [
     path: '/signup',
     name: 'Sign up',
     component: SignUp,
+    beforeEnter: loginRedirection,
+  },
+  {
+    path: '/login',
+    name: 'Log in',
+    component: LogIn,
+    beforeEnter: loginRedirection,
   },
 ];
 
