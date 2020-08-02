@@ -78,6 +78,7 @@ export default {
 
         axios.post('/auth/signup', userData).then((res) => {
           localStorage.token = res.data.token;
+          axios.defaults.headers.common = { Authorization: `Bearer ${localStorage.token}` };
           this.$router.push('Home');
         }).catch((err) => {
           this.errorMessage = err.response.data.message;
