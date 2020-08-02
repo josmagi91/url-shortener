@@ -10,21 +10,21 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 
-//Routes
+// Routes
 app.use('/auth', auth);
 
-function notFound(req, res, next){
-    const err = new Error(`Not found ${req.originalUrl}`);
-    res.status(HttpStatus.NOT_FOUND);
-    next(err);
+function notFound(req, res, next) {
+  const err = new Error(`Not found ${req.originalUrl}`);
+  res.status(HttpStatus.NOT_FOUND);
+  next(err);
 }
 
-function errorHandler(err, req, res, next){
-    res.status(res.statusCode || HttpStatus.INTERNAL_SERVER_ERROR);
-    res.json({
-        message: err.message,
-        stack: err.stack
-    });
+function errorHandler(err, req, res, next) {
+  res.status(res.statusCode || HttpStatus.INTERNAL_SERVER_ERROR);
+  res.json({
+    message: err.message,
+    stack: err.stack,
+  });
 }
 
 app.use(notFound);
