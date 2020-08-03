@@ -9,6 +9,7 @@ const urlSchema = Joi.object().keys({
   url: Joi.string().uri().required(),
 });
 
+// Shorten a url
 router.post('/shorturl/new', (req, res, next) => {
   const result = urlSchema.validate(req.body);
   if (result.error) {
@@ -21,6 +22,26 @@ router.post('/shorturl/new', (req, res, next) => {
       res.status(err.statusCode);
       next(err);
     });
+  }
+});
+
+// Get the original url from a short url
+router.get('/shorturl/:shortUrl', (req, res, next) => {
+  const { shortUrl } = req.params;
+  if (shortUrl.length === 6) {
+    Urls.findShortUrl(shortUrl).then((url) => {
+      if (url) {
+        res.json(url);
+      } else {
+        res.status(HttpStatus.NOT_FOUND);
+        const error = new Error('Page not found');
+        next(error);
+      }
+    });
+  } else {
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY);
+    const error = new Error('Bad short url');
+    next(error);
   }
 });
 

@@ -29,6 +29,9 @@ async function findShortUrl(short) {
   try {
     const db = await client.db;
     const urlFound = await db.collection('urls').findOne({ shortUrl: short });
+    if (urlFound) {
+      delete urlFound._id;
+    }
     return urlFound;
   } catch (err) {
     err.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -49,6 +52,7 @@ async function insertUrl(urlInfo) {
     // Generate a random url until it finds an unused url
     let short;
     let used;
+    /* eslint-disable no-await-in-loop */
     do {
       short = generateShortUrl();
       used = await findShortUrl(short);

@@ -15,7 +15,7 @@ const request = supertest(app);
 
 beforeAll(initUrlsCollection);
 
-describe('Auth test', () => {
+describe('Api test', () => {
   it('should generate a new short url', async () => {
     const res = await request.post('/api/shorturl/new').send(newURL);
     expect(res.statusCode).toBe(HttpStatus.OK);
@@ -29,6 +29,17 @@ describe('Auth test', () => {
     expect(res.statusCode).toBe(HttpStatus.OK);
     expect(res.body.url).toBe(existentURL.url);
     expect(res.body.shortUrl).toBe(existentURL.shortUrl);
+  });
+  it('should response with a long url', async () => {
+    const res = await request.get(`/api/shorturl/${existentURL.shortUrl}`);
+    expect(res.statusCode).toBe(HttpStatus.OK);
+    expect(res.body.url).toBe(existentURL.url);
+    expect(res.body.shortUrl).toBe(existentURL.shortUrl);
+  });
+  it('should response with a 404 Error', async () => {
+    const res = await request.get('/api/shorturl/AAAAAA');
+    expect(res.statusCode).toBe(HttpStatus.NOT_FOUND);
+    expect(res.body.message).toBe('Page not found');
   });
 });
 
