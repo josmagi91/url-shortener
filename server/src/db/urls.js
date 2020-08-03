@@ -60,6 +60,7 @@ async function insertUrl(urlInfo) {
     const urlData = {
       url: urlInfo.url,
       shortUrl: short,
+      timesUsed: 0,
     };
     // Insert and return
     let result = await db.collection('urls').insertOne(urlData);
@@ -72,8 +73,21 @@ async function insertUrl(urlInfo) {
   }
 }
 
+// increase timesUsed by 1 for a url, return true, if executed correctly
+async function increaseTimesUsed(short) {
+  try {
+    const db = await client.db;
+    const opResult = await db.collection('urls').updateOne({ shortUrl: short }, { $inc: { timesUsed: 1 } });
+    return opResult.result.ok === 1;
+  } catch (err) {
+    err.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+    throw err;
+  }
+}
+
 module.exports = {
   findUrl,
   findShortUrl,
+  increaseTimesUsed,
   insertUrl,
 };

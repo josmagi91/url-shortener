@@ -32,6 +32,7 @@ router.get('/shorturl/:shortUrl', (req, res, next) => {
     Urls.findShortUrl(shortUrl).then((url) => {
       if (url) {
         res.json(url);
+        Urls.increaseTimesUsed(shortUrl);
       } else {
         res.status(HttpStatus.NOT_FOUND);
         const error = new Error('Page not found');

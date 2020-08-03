@@ -9,6 +9,7 @@ const newURL = {
 const existentURL = {
   url: 'https://stackoverflow.com/',
   shortUrl: 'AtHyAX',
+  timesUsed: 0,
 };
 
 // user constants

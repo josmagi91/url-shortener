@@ -40,6 +40,12 @@ describe('urls.js functions', () => {
     expect(res.url).toBe(existentURL.url);
     expect(res.shortUrl).toBe(existentURL.shortUrl);
   });
+  it('increaseTimesUsed, the field timesUsed should increase by one ', async () => {
+    let res = await urlsFunctions.increaseTimesUsed(existentURL.shortUrl);
+    expect(res).toBe(true);
+    res = await urlsFunctions.increaseTimesUsed(existentURL.shortUrl);
+    expect(res).toBe(true);
+  });
 });
 
 afterAll(cleanDB);
