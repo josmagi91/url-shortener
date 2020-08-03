@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const HttpStatus = require('http-status-codes');
 
 function setUserFromToken(req, res, next) {
   const authorization = req.get('authorization');
@@ -7,8 +8,8 @@ function setUserFromToken(req, res, next) {
     if (bearer === 'Bearer' && token) {
       jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) {
-          const error = new Error('Un-Authorized');
-          res.status(401);
+          const error = new Error('Unauthorized');
+          res.status(HttpStatus.UNAUTHORIZED);
           next(error);
         } else {
           req.user = user;
@@ -23,6 +24,17 @@ function setUserFromToken(req, res, next) {
   }
 }
 
+function isLogged(req, res, next) {
+  if (req.user) {
+    next();
+  } else {
+    const error = new Error('Unauthorized');
+    res.status(HttpStatus.UNAUTHORIZED);
+    next(error);
+  }
+}
+
 module.exports = {
   setUserFromToken,
+  isLogged,
 };

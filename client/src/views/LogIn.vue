@@ -56,7 +56,8 @@ export default {
       axios.post('/auth/login', this.user).then((res) => {
         localStorage.token = res.data.token;
         axios.defaults.headers.common = { Authorization: `Bearer ${localStorage.token}` };
-        this.$router.push('Home');
+        this.$emit('update-login');
+        this.$router.push('/');
       }).catch((err) => {
         this.errorMessage = err.response.data.message;
       });

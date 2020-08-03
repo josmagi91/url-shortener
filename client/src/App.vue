@@ -16,18 +16,39 @@
           </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0">
-          <li class="nav-item">
+          <li v-if="!logged" class="nav-item">
             <router-link :to="{ name: 'Sign up' }" class="nav-link" href="#">Sign up</router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="!logged" class="nav-item">
             <router-link :to="{ name: 'Log in' }" class="nav-link" href="#">Log in</router-link>
+          </li>
+          <li v-else class="nav-item">
+            <a @click="logout" class="nav-link" href="#">Log out</a>
           </li>
         </ul>
       </div>
     </nav>
-    <router-view class="container pt-2"/>
+    <router-view class="container pt-2" @update-login="updateLogin"/>
   </div>
 </template>
+
+<script>
+export default {
+  data: () => ({
+    logged: localStorage.token,
+  }),
+  methods: {
+    updateLogin() {
+      this.logged = localStorage.token;
+    },
+    logout() {
+      localStorage.removeItem('token');
+      this.logged = 0;
+      this.$router.push('/').catch(() => {});
+    },
+  },
+};
+</script>
 
 <style>
 

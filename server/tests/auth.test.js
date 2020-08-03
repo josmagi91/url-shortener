@@ -1,4 +1,5 @@
 /* global describe, it, expect, afterAll, beforeAll */
+
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const HttpStatus = require('http-status-codes');
 const supertest = require('supertest');
@@ -9,7 +10,7 @@ const {
   nonExistentUserOrWrongPassword,
   initDB,
   cleanDB,
-} = require('./testConst');
+} = require('./testConf');
 
 const request = supertest(app);
 

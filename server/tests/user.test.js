@@ -1,4 +1,5 @@
 /* global describe, it, expect, afterAll, beforeAll */
+
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const HttpStatus = require('http-status-codes');
 const userFunctions = require('../src/db/user');
@@ -8,7 +9,7 @@ const {
   nonExistentUser,
   initDB,
   cleanDB,
-} = require('./testConst');
+} = require('./testConf');
 
 beforeAll(initDB);
 
