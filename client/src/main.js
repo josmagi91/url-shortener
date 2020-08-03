@@ -5,7 +5,7 @@ import App from './App.vue';
 import router from './router';
 
 Vue.config.productionTip = false;
-axios.defaults.baseURL = 'http://127.0.0.1:5000';
+axios.defaults.baseURL = process.env.VUE_APP_ENDPOINT;
 
 if (localStorage.token) {
   axios.defaults.headers.common = { Authorization: `Bearer ${localStorage.token}` };
