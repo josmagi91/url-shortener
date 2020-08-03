@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import LogIn from '../views/LogIn.vue';
 import SignUp from '../views/SignUp.vue';
+import Redirect from '../views/Redirect.vue';
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,11 @@ const routes = [
     name: 'Log in',
     component: LogIn,
     beforeEnter: loginRedirection,
+  },
+  {
+    path: '/:url',
+    name: 'user-view',
+    component: Redirect,
   },
 ];
 

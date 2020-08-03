@@ -1,9 +1,9 @@
 const cors = require('cors');
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const HttpStatus = require('http-status-codes');
 const auth = require('./auth');
+const api = require('./api');
 const { setUserFromToken } = require('./auth/middlewares');
 
 const app = express();
@@ -11,11 +11,11 @@ const app = express();
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
-app.use(cookieParser());
 app.use(setUserFromToken);
 
 // Routes
 app.use('/auth', auth);
+app.use('/api', api);
 
 function notFound(req, res, next) {
   const err = new Error(`Not found ${req.originalUrl}`);

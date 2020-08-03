@@ -1,6 +1,17 @@
 const bcrypt = require('bcrypt');
 const client = require('../src/db/connection');
 
+// URL constants
+const newURL = {
+  url: 'https://www.google.com/',
+};
+
+const existentURL = {
+  url: 'https://stackoverflow.com/',
+  shortUrl: 'AtHyAX',
+};
+
+// user constants
 const existentUser = {
   email: 'user0@mail.com',
   password: '12345678',
@@ -21,8 +32,8 @@ const nonExistentUserOrWrongPassword = {
   password: 'agwbweee',
 };
 
-async function initDB() {
-  // Clean up db and close connection
+async function initUsersCollection() {
+  // Init DB and set values to users collection
   const db = await client.db;
   const hashedPassword = await bcrypt.hash(existentUser.password, 12);
   await db.collection('users').insertOne({
@@ -31,18 +42,28 @@ async function initDB() {
   });
 }
 
+async function initUrlsCollection() {
+  // Init DB and set values to urls collection
+  const db = await client.db;
+  await db.collection('urls').insertOne(existentURL);
+}
+
 async function cleanDB() {
   // Clean up db and close connection
   const db = await client.db;
   await db.collection('users').deleteMany({});
+  await db.collection('urls').deleteMany({});
   client.close();
 }
 
 module.exports = {
-  existentUser,
+  newURL,
+  existentURL,
   newUser,
+  existentUser,
   nonExistentUser,
   nonExistentUserOrWrongPassword,
-  initDB,
+  initUsersCollection,
+  initUrlsCollection,
   cleanDB,
 };

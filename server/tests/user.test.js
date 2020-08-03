@@ -7,17 +7,17 @@ const {
   existentUser,
   newUser,
   nonExistentUser,
-  initDB,
+  initUsersCollection,
   cleanDB,
 } = require('./testConf');
 
-beforeAll(initDB);
+beforeAll(initUsersCollection);
 
 describe('user.js functions', () => {
   it('insertNewUser should insert a new user into the DB', async () => {
     const res = await userFunctions.insertNewUser(newUser);
-    expect(res.ops).toBeDefined();
-    expect(res.ops[0].email).toBe(newUser.email);
+    expect(res).toBeDefined();
+    expect(res.email).toBe(newUser.email);
   });
 
   it('insertNewUser should fail to insert a duplicate user', async () => {
@@ -30,8 +30,12 @@ describe('user.js functions', () => {
   });
 
   it('userExists should find if exits a user in the DB', async () => {
-    const res = await userFunctions.findUser(existentUser);
-    expect(res.mail).toBe(existentUser.mail);
+    try {
+      const res = await userFunctions.findUser(existentUser);
+      expect(res.mail).toBe(existentUser.mail);
+    } catch (err) {
+      expect(err.statusCode).toBe(HttpStatus.CONFLICT);
+    }
   });
 
   it('userExists should not find a user', async () => {

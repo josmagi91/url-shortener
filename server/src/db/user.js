@@ -18,10 +18,13 @@ async function insertNewUser(user) {
     } else {
       // User doesn't exist, create one
       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
-      return db.collection('users').insertOne({
+      let found = await db.collection('users').insertOne({
         email: user.email,
         password: hashedPassword,
       });
+      [found] = found.ops;
+      delete found._id;
+      return found;
     }
   } catch (err) {
     err.statusCode = err.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;

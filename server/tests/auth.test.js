@@ -8,13 +8,13 @@ const {
   existentUser,
   newUser,
   nonExistentUserOrWrongPassword,
-  initDB,
+  initUsersCollection,
   cleanDB,
 } = require('./testConf');
 
 const request = supertest(app);
 
-beforeAll(initDB);
+beforeAll(initUsersCollection);
 
 describe('Auth test', () => {
   it('should create a new account', async () => {

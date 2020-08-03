@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const HttpStatus = require('http-status-codes');
 
+// Get the token from user request, veryfy and set user in req.user
 function setUserFromToken(req, res, next) {
   const authorization = req.get('authorization');
   if (authorization) {
@@ -24,6 +25,7 @@ function setUserFromToken(req, res, next) {
   }
 }
 
+// Check if user is logged, else send an error
 function isLogged(req, res, next) {
   if (req.user) {
     next();
