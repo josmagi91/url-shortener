@@ -79,7 +79,7 @@ export default {
         axios.post('/auth/signup', userData).then((res) => {
           localStorage.token = res.data.token;
           axios.defaults.headers.common = { Authorization: `Bearer ${localStorage.token}` };
-          this.$emit('update-login');
+          this.$emit('update-login'); // to hide login and sign up, and show Log out
           this.$router.push('/');
         }).catch((err) => {
           this.errorMessage = err.response.data.message;
@@ -87,6 +87,7 @@ export default {
       }
     },
     validate() {
+      // Check if all data introduced is correct
       if (this.user.password.length < 8) {
         this.errorMessage = 'Password must be 8 characters or longer.';
         return false;

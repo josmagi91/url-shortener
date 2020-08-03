@@ -56,7 +56,7 @@ export default {
       axios.post('/auth/login', this.user).then((res) => {
         localStorage.token = res.data.token;
         axios.defaults.headers.common = { Authorization: `Bearer ${localStorage.token}` };
-        this.$emit('update-login');
+        this.$emit('update-login'); // to hide login and sign up, and show Log out
         this.$router.push('/');
       }).catch((err) => {
         this.errorMessage = err.response.data.message;

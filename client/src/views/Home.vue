@@ -2,6 +2,9 @@
   <section>
     <h1 class="text-center">Shorten your Url</h1>
     <div class="sign-up-form">
+      <div v-if="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
       <form @submit.prevent="shorten">
         <div class="form-group">
           <input
@@ -35,6 +38,7 @@ import axios from 'axios';
 
 export default {
   data: () => ({
+    errorMessage: '',
     url: '',
     shorturl: '',
   }),
@@ -44,6 +48,7 @@ export default {
         url: this.url,
       };
       axios.post('/api/shorturl/new', urlData).then((res) => {
+        // Asign a short url, and show it
         this.shorturl = `${axios.defaults.baseURL}/${res.data.shortUrl}`;
       }).catch((err) => {
         this.errorMessage = err.response.data.message;

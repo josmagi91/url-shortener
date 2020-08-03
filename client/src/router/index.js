@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import axios from 'axios';
 import Home from '../views/Home.vue';
 import LogIn from '../views/LogIn.vue';
 import SignUp from '../views/SignUp.vue';
-import Redirect from '../views/Redirect.vue';
+import NotFound from '../views/NotFound.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,14 @@ function loginRedirection(to, from, next) {
   }
 }
 
+function redirect(to, from, next) {
+  axios.get(`/api/shorturl/${to.params.url}`).then((res) => {
+    window.location = res.data.url;
+  }).catch(() => {
+    next();
+  });
+}
+
 const routes = [
   {
     path: '/',
@@ -22,7 +31,7 @@ const routes = [
     component: Home,
   },
   {
-    path: '/signup',
+    path: '/sign-up',
     name: 'Sign up',
     component: SignUp,
     beforeEnter: loginRedirection,
@@ -34,9 +43,15 @@ const routes = [
     beforeEnter: loginRedirection,
   },
   {
+    path: '/notfound',
+    name: 'Not Found',
+    component: NotFound,
+  },
+  {
     path: '/:url',
-    name: 'user-view',
-    component: Redirect,
+    name: 'redirect',
+    beforeEnter: redirect,
+    component: NotFound,
   },
 ];
 
