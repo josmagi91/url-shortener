@@ -2,6 +2,7 @@ const { Router } = require('express');
 const HttpStatus = require('http-status-codes');
 const Joi = require('joi');
 const Urls = require('../db/urls');
+const { isLogged } = require('../auth/middlewares');
 
 const router = Router();
 
@@ -16,16 +17,23 @@ router.post('/shorturl/new', (req, res, next) => {
     res.status(HttpStatus.UNPROCESSABLE_ENTITY);
     next(result.error);
   } else {
+    let userId;
     if (req.user) {
-      req.body.user = req.user._id;
+      userId = req.user._id;
     }
-    Urls.insertUrl(req.body).then((url) => {
+    const newUrl = req.body;
+    Urls.insertUrl(newUrl, userId).then((url) => {
       res.json(url);
     }).catch((err) => {
       res.status(err.statusCode);
       next(err);
     });
   }
+});
+
+// Get a list of urls created by the user logged;
+router.get('/shorturl/list', isLogged, (req, res, next) => {
+  res.send('OK');
 });
 
 // Get the original url from a short url

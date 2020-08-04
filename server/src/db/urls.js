@@ -43,18 +43,18 @@ async function findUrl(url) {
   }
 }
 
-// Insert a url if it doesn't exist, else return the url found
-async function insertUrl(urlInfo) {
+// Insert a url if it doesn't exist
+async function insertUrl(urlInfo, userId) {
   try {
     const db = await client.db;
     const urlFound = await db.collection('urls').findOne({ url: urlInfo.url }, { projection: { _id: 0, users: 0 } });
     if (urlFound) { // url found, return it
-      if (urlInfo.user) { // If user is logged append his data
+      if (userId) { // If user is logged append his data
         const userData = {
-          user: urlInfo.user,
+          user: userId,
           date: new Date(),
         };
-        await db.collection('urls').updateOne({ url: urlInfo.url, 'users.user': { $ne: urlInfo.user } }, { $push: { users: userData } });
+        await db.collection('urls').updateOne({ url: urlInfo.url, 'users.user': { $ne: userId } }, { $push: { users: userData } });
       }
       return urlFound;
     }
@@ -67,9 +67,9 @@ async function insertUrl(urlInfo) {
       creation: time,
     };
     // If user is logged add his data
-    if (urlInfo.user) {
+    if (userId) {
       urlData.users = [{
-        user: urlInfo.user,
+        user: userId,
         date: time,
       }];
     }
@@ -96,6 +96,10 @@ async function increaseTimesUsed(short) {
     err.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     throw err;
   }
+}
+
+async function getListOfUrlFromUser(user) {
+
 }
 
 module.exports = {

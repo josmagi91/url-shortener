@@ -7,6 +7,8 @@ const app = require('../src/app');
 const {
   newURL,
   existentURL,
+  existentURL2,
+  existentUser,
   initUrlsCollection,
   cleanDB,
 } = require('./testConf');
@@ -52,6 +54,21 @@ describe('Api test', () => {
     const res = await request.get('/api/shorturl/AAAAAA');
     expect(res.statusCode).toBe(HttpStatus.NOT_FOUND);
     expect(res.body.message).toBe('Page not found');
+  });
+
+  it('should get Unauthorized error', async () => {
+    const res = await request.get('/api/shorturl/list');
+    expect(res.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+    expect(res.body.message).toBe('Unauthorized');
+  });
+  it('a logged user should get a list of his urls', async () => {
+    const loginResp = await request.post('/api/shorturl/list').send(existentUser);
+    const res = await request.get('/api/shorturl/list').set('Authorization', `Bearer ${loginResp.body.token}`);
+    const expectedResult = [
+      existentURL,
+      existentURL2,
+    ];
+    expect(res.body.urls).toBeEquals(expectedResult);
   });
 });
 
