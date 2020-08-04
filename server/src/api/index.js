@@ -33,7 +33,12 @@ router.post('/shorturl/new', (req, res, next) => {
 
 // Get a list of urls created by the user logged;
 router.get('/shorturl/list', isLogged, (req, res, next) => {
-  res.send('OK');
+  Urls.getListOfUrlFromUser(req.user._id).then((urlList) => {
+    res.json({ urls: urlList });
+  }).catch((err) => {
+    res.status(err.statusCode);
+    next(err);
+  });
 });
 
 // Get the original url from a short url

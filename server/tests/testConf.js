@@ -42,6 +42,9 @@ const nonExistentUserOrWrongPassword = {
   password: 'agwbweee',
 };
 
+// It's a copy of existentUser but password is hashed and contains a _id
+const existentUserLogged = { ...existentUser };
+
 async function initUsersCollection() {
   // Init DB and set values to users collection
   const db = await client.db;
@@ -50,19 +53,20 @@ async function initUsersCollection() {
     email: existentUser.email,
     password: hashedPassword,
   });
-  existentUser._id = usr.ops[0]._id;
+  existentUserLogged._id = usr.ops[0]._id;
+  existentUserLogged.password = hashedPassword;
 }
 
 async function initUrlsCollection() {
   // Init DB and set values to urls collection
   const db = await client.db;
-  initUsersCollection();
+  await initUsersCollection();
   existentURL.users = [{
-    user: existentUser._id,
+    user: existentUserLogged._id,
     date: NOW,
   }];
   existentURL2.users = [{
-    user: existentUser._id,
+    user: existentUserLogged._id,
     date: NOW,
   }];
   await db.collection('urls').insertMany([existentURL, existentURL2]);
@@ -82,6 +86,7 @@ module.exports = {
   existentURL2,
   newUser,
   existentUser,
+  existentUserLogged,
   nonExistentUser,
   nonExistentUserOrWrongPassword,
   initUsersCollection,

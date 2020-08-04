@@ -5,6 +5,7 @@ const urlsFunctions = require('../src/db/urls');
 const {
   newURL,
   existentURL,
+  existentUserLogged,
   initUrlsCollection,
   cleanDB,
 } = require('./testConf');
@@ -38,6 +39,17 @@ describe('urls.js functions', () => {
     const res = await urlsFunctions.insertUrl(existentURL);
     expect(res.url).toBe(existentURL.url);
     expect(res.shortUrl).toBe(existentURL.shortUrl);
+  });
+
+  it('a logged user should get a list of his urls', async () => {
+    const res = await urlsFunctions.getListOfUrlFromUser(existentUserLogged._id);
+    expect(res.length).toBe(2);
+    res.forEach((doc) => {
+      expect(doc.url).toMatch(/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/);
+      expect(doc.shortUrl.length).toBe(6);
+      expect(doc).toHaveProperty('timesUsed');
+      expect(doc).toHaveProperty('created');
+    });
   });
 
   it('increaseTimesUsed, the field timesUsed should increase by one ', async () => {

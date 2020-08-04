@@ -1,4 +1,5 @@
 const HttpStatus = require('http-status-codes');
+const { ObjectId } = require('mongodb');
 const client = require('./connection');
 
 // Find a url document using a short url
@@ -48,18 +49,24 @@ async function insertUrl(urlInfo, userId) {
   try {
     const db = await client.db;
     const urlFound = await db.collection('urls').findOne({ url: urlInfo.url }, { projection: { _id: 0, users: 0 } });
-    if (urlFound) { // url found, return it
+
+    let userData;
+    const time = new Date();
+    if (userId) { // If user is logged, prepare data
+      userData = {
+        user: ObjectId(userId),
+        date: time,
+      };
+    }
+    if (urlFound) { // If it was shortened
       if (userId) { // If user is logged append his data
-        const userData = {
-          user: userId,
-          date: new Date(),
-        };
         await db.collection('urls').updateOne({ url: urlInfo.url, 'users.user': { $ne: userId } }, { $push: { users: userData } });
       }
       return urlFound;
     }
+
+    // If it wasn't shortened
     // Data to insert
-    const time = new Date();
     const urlData = {
       url: urlInfo.url,
       shortUrl: await generateShortUrl(),
@@ -68,10 +75,7 @@ async function insertUrl(urlInfo, userId) {
     };
     // If user is logged add his data
     if (userId) {
-      urlData.users = [{
-        user: userId,
-        date: time,
-      }];
+      urlData.users = [userData];
     }
 
     // Insert and return
@@ -98,13 +102,40 @@ async function increaseTimesUsed(short) {
   }
 }
 
-async function getListOfUrlFromUser(user) {
-
+async function getListOfUrlFromUser(userId) {
+  try {
+    const db = await client.db;
+    const agg = [
+      {
+        $unwind: {
+          path: '$users',
+        },
+      }, {
+        $match: {
+          'users.user': ObjectId(userId),
+        },
+      }, {
+        $project: {
+          _id: 0,
+          url: 1,
+          shortUrl: 1,
+          timesUsed: 1,
+          created: '$users.date',
+        },
+      },
+    ];
+    const cursor = await db.collection('urls').aggregate(agg);
+    return await cursor.toArray();
+  } catch (err) {
+    err.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+    throw err;
+  }
 }
 
 module.exports = {
   findUrl,
   findShortUrl,
+  getListOfUrlFromUser,
   increaseTimesUsed,
   insertUrl,
 };

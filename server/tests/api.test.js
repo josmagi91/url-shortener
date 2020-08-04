@@ -7,7 +7,6 @@ const app = require('../src/app');
 const {
   newURL,
   existentURL,
-  existentURL2,
   existentUser,
   initUrlsCollection,
   cleanDB,
@@ -62,13 +61,14 @@ describe('Api test', () => {
     expect(res.body.message).toBe('Unauthorized');
   });
   it('a logged user should get a list of his urls', async () => {
-    const loginResp = await request.post('/api/shorturl/list').send(existentUser);
+    const loginResp = await request.post('/auth/login').send(existentUser);
     const res = await request.get('/api/shorturl/list').set('Authorization', `Bearer ${loginResp.body.token}`);
-    const expectedResult = [
-      existentURL,
-      existentURL2,
-    ];
-    expect(res.body.urls).toBeEquals(expectedResult);
+    res.body.urls.forEach((doc) => {
+      expect(doc.url).toMatch(/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/);
+      expect(doc.shortUrl.length).toBe(6);
+      expect(doc).toHaveProperty('timesUsed');
+      expect(doc).toHaveProperty('created');
+    });
   });
 });
 
