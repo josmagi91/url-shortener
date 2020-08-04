@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data: () => ({
     logged: localStorage.token,
@@ -43,6 +45,7 @@ export default {
     },
     logout() {
       localStorage.removeItem('token');
+      delete axios.defaults.headers.common.Authorization;
       this.logged = 0;
       this.$router.push('/').catch(() => {});
     },

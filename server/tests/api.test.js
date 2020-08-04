@@ -18,6 +18,10 @@ beforeAll(initUrlsCollection);
 describe('Api test', () => {
   it('should generate a new short url', async () => {
     const res = await request.post('/api/shorturl/new').send(newURL);
+
+    expect(res.body._id).toBeUndefined();
+    expect(res.body.users).toBeUndefined();
+
     expect(res.statusCode).toBe(HttpStatus.OK);
     expect(res.body).toHaveProperty('url');
     expect(res.body).toHaveProperty('shortUrl');
@@ -26,12 +30,20 @@ describe('Api test', () => {
   it('should return a short url from an existent url', async () => {
     const extUrl = { url: existentURL.url };
     const res = await request.post('/api/shorturl/new').send(extUrl);
+
+    expect(res.body._id).toBeUndefined();
+    expect(res.body.users).toBeUndefined();
+
     expect(res.statusCode).toBe(HttpStatus.OK);
     expect(res.body.url).toBe(existentURL.url);
     expect(res.body.shortUrl).toBe(existentURL.shortUrl);
   });
   it('should response with a long url', async () => {
     const res = await request.get(`/api/shorturl/${existentURL.shortUrl}`);
+
+    expect(res.body._id).toBeUndefined();
+    expect(res.body.users).toBeUndefined();
+
     expect(res.statusCode).toBe(HttpStatus.OK);
     expect(res.body.url).toBe(existentURL.url);
     expect(res.body.shortUrl).toBe(existentURL.shortUrl);

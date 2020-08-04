@@ -34,12 +34,12 @@ describe('urls.js functions', () => {
     expect(res.shortUrl).toBeDefined();
     expect(res.shortUrl.length).toBe(6);
   });
-
   it('insertUrl should return an existend short url', async () => {
     const res = await urlsFunctions.insertUrl(existentURL);
     expect(res.url).toBe(existentURL.url);
     expect(res.shortUrl).toBe(existentURL.shortUrl);
   });
+
   it('increaseTimesUsed, the field timesUsed should increase by one ', async () => {
     let res = await urlsFunctions.increaseTimesUsed(existentURL.shortUrl);
     expect(res).toBe(true);

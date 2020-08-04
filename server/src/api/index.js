@@ -16,6 +16,9 @@ router.post('/shorturl/new', (req, res, next) => {
     res.status(HttpStatus.UNPROCESSABLE_ENTITY);
     next(result.error);
   } else {
+    if (req.user) {
+      req.body.user = req.user._id;
+    }
     Urls.insertUrl(req.body).then((url) => {
       res.json(url);
     }).catch((err) => {
@@ -31,8 +34,9 @@ router.get('/shorturl/:shortUrl', (req, res, next) => {
   if (shortUrl.length === 6) {
     Urls.findShortUrl(shortUrl).then((url) => {
       if (url) {
-        res.json(url);
-        Urls.increaseTimesUsed(shortUrl);
+        Urls.increaseTimesUsed(shortUrl).then(() => {
+          res.json(url);
+        });
       } else {
         res.status(HttpStatus.NOT_FOUND);
         const error = new Error('Page not found');
