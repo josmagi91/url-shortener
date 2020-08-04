@@ -11,8 +11,8 @@
 
       <div class="navbar-collapse collapse" id="navbarColor01" style="">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <router-link :to="{ name: 'Home' }" href="#">Home</router-link>
+          <li v-if="logged" class="nav-item">
+            <router-link :to="{ name: 'List' }" href="#">My urls</router-link>
           </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0">
@@ -37,11 +37,11 @@ import axios from 'axios';
 
 export default {
   data: () => ({
-    logged: localStorage.token,
+    logged: localStorage.token ? 1 : 0,
   }),
   methods: {
     updateLogin() {
-      this.logged = localStorage.token;
+      this.logged = localStorage.token ? 1 : 0;
     },
     logout() {
       localStorage.removeItem('token');

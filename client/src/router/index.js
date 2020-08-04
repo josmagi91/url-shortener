@@ -5,6 +5,7 @@ import Home from '../views/Home.vue';
 import LogIn from '../views/LogIn.vue';
 import SignUp from '../views/SignUp.vue';
 import NotFound from '../views/NotFound.vue';
+import List from '../views/List.vue';
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
     name: 'Log in',
     component: LogIn,
     beforeEnter: loginRedirection,
+  },
+  {
+    path: '/list',
+    name: 'List',
+    component: List,
   },
   {
     path: '/notfound',
