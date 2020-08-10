@@ -2,7 +2,7 @@ const { Router } = require('express');
 const HttpStatus = require('http-status-codes');
 const Joi = require('joi');
 const Urls = require('../db/urls');
-const { isLogged } = require('../auth/middlewares');
+const { isLogged, validate } = require('../middlewares');
 
 const router = Router();
 
@@ -11,24 +11,18 @@ const urlSchema = Joi.object().keys({
 });
 
 // Shorten a url
-router.post('/shorturl/new', (req, res, next) => {
-  const result = urlSchema.validate(req.body);
-  if (result.error) {
-    res.status(HttpStatus.UNPROCESSABLE_ENTITY);
-    next(result.error);
-  } else {
-    let userId;
-    if (req.user) {
-      userId = req.user._id;
-    }
-    const newUrl = req.body;
-    Urls.insertUrl(newUrl, userId).then((url) => {
-      res.json(url);
-    }).catch((err) => {
-      res.status(err.statusCode);
-      next(err);
-    });
+router.post('/shorturl/new', validate(urlSchema), (req, res, next) => {
+  let userId;
+  if (req.user) {
+    userId = req.user._id;
   }
+  const newUrl = req.body;
+  Urls.insertUrl(newUrl, userId).then((url) => {
+    res.json(url);
+  }).catch((err) => {
+    res.status(err.statusCode);
+    next(err);
+  });
 });
 
 // Get a list of urls created by the user logged;

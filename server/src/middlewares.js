@@ -36,7 +36,21 @@ function isLogged(req, res, next) {
   }
 }
 
+// Validates req.body using a schema
+function validate(schema) {
+  return (req, res, next) => {
+    const result = schema.validate(req.body);
+    if (result.error) {
+      res.status(HttpStatus.UNPROCESSABLE_ENTITY);
+      next(result.error);
+    } else {
+      next();
+    }
+  };
+}
+
 module.exports = {
   setUserFromToken,
   isLogged,
+  validate,
 };

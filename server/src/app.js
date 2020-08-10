@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const HttpStatus = require('http-status-codes');
 const auth = require('./auth');
 const api = require('./api');
-const { setUserFromToken } = require('./auth/middlewares');
+const { setUserFromToken } = require('./middlewares');
 
 const app = express();
 
