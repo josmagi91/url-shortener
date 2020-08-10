@@ -49,8 +49,24 @@ function validate(schema) {
   };
 }
 
+function notFound(req, res, next) {
+  const err = new Error(`Not found ${req.originalUrl}`);
+  res.status(HttpStatus.NOT_FOUND);
+  next(err);
+}
+
+function errorHandler(err, req, res, next) {
+  res.status(res.statusCode || HttpStatus.INTERNAL_SERVER_ERROR);
+  res.json({
+    message: err.message,
+    stack: err.stack,
+  });
+}
+
 module.exports = {
-  setUserFromToken,
+  errorHandler,
   isLogged,
+  notFound,
+  setUserFromToken,
   validate,
 };

@@ -50,7 +50,7 @@ router.post('/login', validate(userSchema), (req, res, next) => {
               res.status(HttpStatus.UNPROCESSABLE_ENTITY);
               next(new Error('Can\'t create a token'));
             } else {
-              res.json({ token });
+              res.json({ token }); // Respond with a token
             }
           });
         } else {
@@ -63,6 +63,9 @@ router.post('/login', validate(userSchema), (req, res, next) => {
       res.status(HttpStatus.UNPROCESSABLE_ENTITY);
       next(new Error('Wrong mail or password.'));
     }
+  }).catch((err) => {
+    res.status(err.statusCode);
+    next(err);
   });
 });
 
