@@ -4,14 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./src",
+    "start": "node ./src",
     "dev": "cross-env NODE_ENV=development nodemon ./src'",
     "lint": "./node_modules/.bin/eslint src/**/*.js",
     "test": "cross-env NODE_ENV=test jest -i"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josmagi91/url-shortener.git"
+  },
   "keywords": [],
   "author": "José María Mares Giner",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josmagi91/url-shortener/issues"
+  },
+  "homepage": "https://github.com/josmagi91/url-shortener#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
