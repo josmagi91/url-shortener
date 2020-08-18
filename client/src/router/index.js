@@ -21,7 +21,7 @@ function redirect(to, from, next) {
   axios.get(`/api/shorturl/${to.params.url}`).then((res) => {
     window.location = res.data.url;
   }).catch(() => {
-    next('Not Found');
+    next('/notfound');
   });
 }
 
