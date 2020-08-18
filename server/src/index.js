@@ -1,5 +1,4 @@
 const dotenv = require('dotenv');
-const app = require('./app');
 
 if (process.env.NODE_ENV) {
   dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
@@ -8,6 +7,8 @@ if (process.env.NODE_ENV) {
   dotenv.config();
   console.log('Using .env');
 }
+
+const app = require('./app');
 
 const DEFAULT_PORT = 5000;
 const PORT = process.env.PORT || DEFAULT_PORT;
