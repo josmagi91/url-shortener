@@ -23,7 +23,6 @@ async function insertNewUser(user) {
         password: hashedPassword,
       });
       [found] = found.ops;
-      delete found._id;
       return found;
     }
   } catch (err) {
