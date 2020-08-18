@@ -27,7 +27,7 @@ import axios from 'axios';
 export default {
   data: () => ({
     errorMessage: '',
-    urlBase: process.env.VUE_APP_BASE_URL,
+    urlBase: window.location.origin,
     urls: [],
   }),
   created() {

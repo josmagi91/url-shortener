@@ -49,7 +49,7 @@ export default {
       };
       axios.post('/api/shorturl/new', urlData).then((res) => {
         // Asign a short url, and show it
-        this.shorturl = `${process.env.VUE_APP_BASE_URL}/${res.data.shortUrl}`;
+        this.shorturl = `${window.location.origin}/${res.data.shortUrl}`;
       }).catch((err) => {
         this.errorMessage = err.response.data.message;
       });
